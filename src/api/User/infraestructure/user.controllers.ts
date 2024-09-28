@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { UserModel } from '../domain/user.module';
 import { User } from '../models/user.model';
+import { ExerciseModel } from '../../Exercise/domain/exercise.module';
 
 
 async function getAllUsers(req: Request, res: Response) {
@@ -65,6 +66,8 @@ async function sign(req: Request, res: Response) {
 
     const { email, password } = req.body;
 
+    const pendings = [];
+
     const user = await UserModel.findOne({ email });
     if (!user) return res.json( {success: false, msg: 'Usuario o contraseña incorrectos'} ).status(404);
 
@@ -75,11 +78,16 @@ async function sign(req: Request, res: Response) {
       { username: user.email, user_id: user._id },
       process.env.JWT_KEY_APP,
       { expiresIn: '1d' }
-    )
+    );
 
-    return res.json( { succes: true, data: [user, token] } ).status(200);
+    for (const pend of user.pending_exercices) {
+      const getter = await ExerciseModel.findById(pend);
+      pendings.push(getter);
+    }
 
-  } catch (error) { return res.json( { success: true, msg: 'Error interno' } ).status(404) }
+    return res.json( { success: true, data: [user, pendings, token] } ).status(200);
+
+  } catch (error) { return res.json( { success: false, msg: 'Error interno' } ).status(404) }
 
 }
 

@@ -10,7 +10,19 @@ const UserSchema = new mongoose.Schema({
     type: String,
     require: true
   },
+  group: {
+    type: String,
+    require: true
+  },
   password: {
+    type: String,
+    require: true
+  },
+  pending_exercices: {
+    type: Array,
+    require: true
+  },
+  type: {
     type: String,
     require: true
   }
