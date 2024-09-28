@@ -23,17 +23,17 @@ async function getAllUsers(req: Request, res: Response) {
 
 async function getUserById (req: Request, res: Response) {
 
-  // try {
+  try {
 
-  //   const { userId } = req.params;
-  //   if( !userId ) return badResponse(res, 'mess_1'); 
+    const { userId } = req.params;
+    if( !userId ) return res.json({ success: false, msg: 'Usuario no encontrado' }); 
 
-  //   const user = await UserModel.findById(userId);
-  //   if (!user) return badResponse(res, 'user_mess_8'); 
+    const user = await UserModel.findById(userId);
+    if (!user) return res.json({ success: false, msg: 'Usuario no encontrado' }); 
 
-  //   return goodResponse(res, 'crud_mess_0', user);
+    return res.json({ success: true, data: user });
 
-  // } catch (error) { return badResponse(res, 'mess_0', error.message) }
+  } catch (error) { return res.json({ success: false, msg: 'Error al obtener usuario' }) }
 
 }
 
@@ -151,6 +151,30 @@ async function deleteUserById(req: Request, res: Response) {
 
 }
 
+
+async function getUserPendingExercises(req: Request, res: Response) {
+
+  try{
+      
+      const { userId } = req.params;
+      if( !userId ) return res.json({ success: false, msg: 'Usuario no encontrado' }); 
+  
+      const user = await UserModel.findById(userId);
+      if (!user) return res.json({ success: false, msg: 'Usuario no encontrado' }); 
+  
+      const pendings = [];
+  
+      for (const pend of user.pending_exercices) {
+        const getter = await ExerciseModel.findById(pend);
+        pendings.push(getter);
+      }
+  
+      return res.json({ success: true, data: pendings });
+  }catch{
+      return res.json({ success: false, msg: 'Error al obtener ejercicios pendientes' });
+  }
+
+}
 export const UserControllers = {
     deleteUserById,
     changePassword,
@@ -158,5 +182,6 @@ export const UserControllers = {
     getAllUsers,
     editUser,
     saveUser,
-    sign
+    sign,
+    getUserPendingExercises
   }

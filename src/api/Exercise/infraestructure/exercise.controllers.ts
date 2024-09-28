@@ -3,7 +3,6 @@ import { Response, Request } from 'express';
 import { ExerciseModel } from '../domain/exercise.module';
 import { Exercise } from '../models/exercise.model';
 import { UserModel } from '../../User/domain/user.module';
-import { User } from '../../User/models/user.model';
 
 async function getAllExercises(req: Request, res: Response) {
 
@@ -75,7 +74,16 @@ async function updateExercise(req: Request, res: Response) {
 
   try {
 
-    await ExerciseModel.findByIdAndUpdate(id, exercise);
+    const existingExercise = await ExerciseModel.findById(id);
+    if (!existingExercise) {
+      return res.status(404).json({
+        success: false,
+        data: []
+      });
+    }
+
+    const updated = Object.assign(existingExercise, exercise);
+    await ExerciseModel.findByIdAndUpdate(id, updated);
 
     return res.json({
       success: true,

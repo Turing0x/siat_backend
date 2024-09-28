@@ -8,6 +8,7 @@ router
 
   .get('/', UserControllers.getAllUsers)
   .get('/:userId', UserControllers.getUserById)
+  .get('/pending_exercises/:userId', UserControllers.getUserPendingExercises)
 
   .post('/', UserControllers.saveUser)
   .post('/signin', UserControllers.sign)
