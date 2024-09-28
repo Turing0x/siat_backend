@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { ExerciseControllers } from "./infraestructure/exercise.controllers";
+import { ExerciseControllers } from "./infraestructure/excercise.controllers";
 
 const router = Router()
 

@@ -1,7 +1,5 @@
 import { Response, Request } from 'express';
-
 import { SolutionModel } from '../domain/solution.module';
-
 import { Solution } from '../models/solution.model';
 
 async function getAllSolutions(req: Request, res: Response) {

@@ -14,6 +14,10 @@ const ExerciseSchema = new mongoose.Schema({
       type: String,
       require: true
     },
+    anotations: {
+      type: String,
+      require: false
+    },
     exercise_files_info: {
       type: Array,
       require: true
@@ -21,4 +25,4 @@ const ExerciseSchema = new mongoose.Schema({
   
   });
   
-  export const ExerciseModel = mongoose.model('exercise', ExerciseSchema);
+  export const ExerciseModel = mongoose.model('excercises', ExerciseSchema);

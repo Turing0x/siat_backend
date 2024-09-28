@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { Solution } from '../models/solution.model';
 
 const SolutionSchema = new mongoose.Schema({
 
@@ -9,7 +8,22 @@ const SolutionSchema = new mongoose.Schema({
     },
     student_id: {
         type: String,
-        require: true
+        require: true,
+        ref: 'users'
+    },
+    exercise_id: {
+        type: String,
+        require: true,
+        ref: 'excercises'
+    },
+    evaluation: {
+        type: Number,
+        require: true,
+        default: 0
+    },
+    anotations: {
+        type: String,
+        require: false
     }
   
   });
