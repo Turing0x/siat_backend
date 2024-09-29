@@ -11,6 +11,8 @@ router
 
   .post('/', ExerciseControllers.createExercise)
   .put('/:id', ExerciseControllers.updateExercise)
-
+  
+  .post('/solution/:id', ExerciseControllers.addFilesToExercise)
+  
   .delete('/:id', ExerciseControllers.deleteExerciseById)
 export const ExerciseRouter = router

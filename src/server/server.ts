@@ -32,6 +32,7 @@ export class Server {
 
     // Lectura y parseo a formato JSON del body
     this.app.use(express.json())
+    this.app.use(express.urlencoded({ extended: true }));
 
     // Ruta publica para ver el html
     this.app.use(express.static('src/public'))

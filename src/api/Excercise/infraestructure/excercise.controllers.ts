@@ -95,6 +95,43 @@ async function updateExercise(req: Request, res: Response) {
   }
 }
 
+async function addFilesToExercise(req: Request, res: Response) {
+
+  const { id } = req.params;
+  const file: File = req.body;
+
+  console.log('file :>> ', file);
+
+  try {
+
+    const existingExercise = await ExerciseModel.findById(id);
+    if (!existingExercise) {
+      return res.status(404).json({
+        success: false,
+        data: []
+      });
+    }
+
+    // const updated = Object.assign(
+    //   existingExercise,
+    //   { 
+    //     exercise_files_info: [
+    //       ...existingExercise.exercise_files_info, 
+    //       ...
+    //     ] 
+    //   }
+    // )
+
+    // await ExerciseModel.findByIdAndUpdate(id, updated);
+
+    return res.json({ success: true, data: 'updated' });
+
+  } catch (error) { return res.status(404).json({
+      success: false, data: error.message
+    }); 
+  }
+}
+
 async function deleteExerciseById(req: Request, res: Response) {
 
   const { id } = req.params;
@@ -114,9 +151,10 @@ async function deleteExerciseById(req: Request, res: Response) {
 }
 
 export const ExerciseControllers = { 
+  addFilesToExercise,
+  deleteExerciseById,
   getAllExercises, 
   getExerciseById, 
   createExercise, 
   updateExercise, 
-  deleteExerciseById
 };

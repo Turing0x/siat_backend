@@ -2,6 +2,8 @@ import { Response, Request } from 'express';
 import { SolutionModel } from '../domain/solution.module';
 import { Solution } from '../models/solution.model';
 
+import fs from 'fs';
+
 async function getAllSolutions(req: Request, res: Response) {
 
   try {
@@ -32,13 +34,20 @@ async function getSolutionById(req: Request, res: Response) {
 }
 
 async function createSolution(req: Request, res: Response) {
-  const solution: Solution = req.body;
-  const newSolution = new SolutionModel(solution);
+
+  const file = req.file;
+  const body = req.body;
+
+  console.log('file :>> ', file);
+  console.log('body :>> ', body);
+
   try {
-    await newSolution.save();
+
+    // fs.writeFileSync('./prueba.rar', buf);
+    // await newSolution.save();
     return res.json({
       success: true,
-      data: newSolution
+      data: 'newSolution'
     });
   } catch (error) { return res.status(404).json({
       success: false, data: []
