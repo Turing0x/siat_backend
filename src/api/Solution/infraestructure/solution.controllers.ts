@@ -3,6 +3,8 @@ import { SolutionModel } from '../domain/solution.module';
 import { Solution } from '../models/solution.model';
 import { id_file_name } from '../../../database/multer.config';
 
+import path from 'path';
+
 async function getAllSolutions(req: Request, res: Response) {
 
   try {
@@ -55,6 +57,32 @@ async function createSolution(req: Request, res: Response) {
   }
 }
 
+async function getFileBySolution(req: Request, res: Response) {
+  const { id } = req.params;
+  try {
+    const solution = await SolutionModel.find({exercise_id: id});
+    if (!solution) {
+      return res.status(404).json({
+        success: false,
+        data: []
+      });
+    }
+
+    const fileName = path.join(process.cwd(), './uploads', `${solution[0].file_name}.rar`);
+    return res.status(200).sendFile(fileName);
+
+    return res.json({
+      success: true,
+      data: solution[0].file_name
+    });
+  } catch (error) { 
+    console.log(error);
+    return res.status(404).json({
+      success: false, data: []
+    }); 
+  }
+}
+
 async function updateSolution(req: Request, res: Response) {
   const { id } = req.params;
   const solution: Solution = req.body;
@@ -85,6 +113,7 @@ async function deleteSolution(req: Request, res: Response) {
 }
 
 export const SolutionControllers = {
+  getFileBySolution,
   getAllSolutions,
   getSolutionById,
   createSolution,

@@ -67,6 +67,31 @@ async function createExercise(req: Request, res: Response) {
   }
 }
 
+async function getFileByExercise(req: Request, res: Response) {
+
+  const { id } = req.params;
+
+  try {
+
+    const existingExercise = await ExerciseModel.findById(id);
+    if (!existingExercise) {
+      return res.status(404).json({
+        success: false,
+        data: []
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: existingExercise.exercise_files_info
+    });
+
+  } catch (error) { return res.status(404).json({
+      success: false, data: []
+    }); 
+  }
+}
+
 async function updateExercise(req: Request, res: Response) {
 
   const { id } = req.params;
