@@ -2,8 +2,8 @@ import mongoose from 'mongoose';
 
 const SolutionSchema = new mongoose.Schema({
 
-    solution_files_info: {
-        type: Array,
+    file_name: {
+        type: String,
         require: true
     },
     student_id: {

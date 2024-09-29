@@ -10,7 +10,7 @@ router
   .get('/', SolutionControllers.getAllSolutions)
   .get('/:id', SolutionControllers.getSolutionById)
 
-  .post('/:id', upload.single('file'), SolutionControllers.createSolution)
+  .post('/:ex_id/:student_id', upload.single('file'), SolutionControllers.createSolution)
 
   .put('/:id', SolutionControllers.updateSolution)
 
