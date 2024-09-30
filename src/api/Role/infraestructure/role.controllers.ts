@@ -18,7 +18,6 @@ async function getAllRoles(req: Request, res: Response) {
 
 async function getRoleById(req: Request, res: Response) {
     const { roleId } = req.params;
-    console.log(roleId);
     try {
         const role = await RoleModel.findById(roleId);
         return res.json({

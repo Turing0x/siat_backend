@@ -10,10 +10,14 @@ router
   .get('/', ExerciseControllers.getAllExercises)
   .get('/:id', ExerciseControllers.getExerciseById)
 
-  .post('/', ExerciseControllers.createExercise)
+  .post('/', upload.fields([
+    {name: 'exFile', maxCount: 1}, 
+    {name: 'solFile', maxCount: 1}
+  ]), ExerciseControllers.createExercise)
+
   .post('/solution/:id', ExerciseControllers.addFilesToExercise)
   
-  .put('/:id', upload.single('file'), ExerciseControllers.updateExercise)
+  .put('/:id', ExerciseControllers.updateExercise)
   
   .delete('/:id', ExerciseControllers.deleteExerciseById)
 export const ExerciseRouter = router

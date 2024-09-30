@@ -4,23 +4,18 @@ const ExerciseSchema = new mongoose.Schema({
 
     description: {
       type: String,
-      require: true
     },
     posible_solution: {
       type: String,
-      require: true
     },
     solution: {
       type: String,
-      require: true
     },
     annotations: {
       type: String,
-      require: false
     },
-    exercise_files_info: {
-      type: Array,
-      require: true
+    exercise_files: {
+      type: String,
     }
   
   });

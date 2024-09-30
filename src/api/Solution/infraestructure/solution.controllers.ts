@@ -71,7 +71,6 @@ async function getFileBySolution(req: Request, res: Response) {
     return res.status(200).sendFile(fileName);
 
   } catch (error) { 
-    console.log(error);
     return res.status(404).json({
       success: false, data: []
     }); 

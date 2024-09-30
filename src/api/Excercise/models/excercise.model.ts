@@ -6,5 +6,5 @@ export type Exercise = {
   posible_solution: string;
   solution: string;
   annotations: string;
-  exercise_files_info: FileInfo[];
+  exercise_files: string;
 }
