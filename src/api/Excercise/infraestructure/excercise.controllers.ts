@@ -41,19 +41,28 @@ async function getExerciseById(req: Request, res: Response) {
 
 async function createExercise(req: Request, res: Response) {
 
-  const excercises: Exercise = req.body;
-  const newExercise = new ExerciseModel(excercises);
+  const data: Exercise = req.body;
 
+  
+  const exFile = req.files['exFile'];
+  const solFile = req.files['solFile'];
+  
   try {
 
+    const newExercise = new ExerciseModel(data);
+
+    newExercise.exercise_files = exFile[0].filename;
+    newExercise.solution = solFile ? solFile[0].filename : null;
+
+    await newExercise.save();
+
     const students = await UserModel.find({type: 'student'});
-    const excercises = await newExercise.save();
 
     for ( const student of students ) {
       await UserModel.findByIdAndUpdate(student._id, {
-        $push: { pending_exercices: excercises._id } 
+        $push: { pending_exercices: newExercise._id } 
         }
-      ).then( (res) => console.log(res) );
+      ).then( (res) => {});
     }
 
     return res.json({
@@ -61,8 +70,10 @@ async function createExercise(req: Request, res: Response) {
       data: newExercise
     });
 
-  } catch (error) { return res.status(404).json({
-      success: false, data: []
+  } catch (error) { 
+    console.log(error);
+    return res.status(404).json({
+      success: false, data: error
     }); 
   }
 }
@@ -98,9 +109,6 @@ async function updateExercise(req: Request, res: Response) {
 async function addFilesToExercise(req: Request, res: Response) {
 
   const { id } = req.params;
-  const file: File = req.body;
-
-  console.log('file :>> ', file);
 
   try {
 
