@@ -67,31 +67,6 @@ async function createExercise(req: Request, res: Response) {
   }
 }
 
-async function getFileByExercise(req: Request, res: Response) {
-
-  const { id } = req.params;
-
-  try {
-
-    const existingExercise = await ExerciseModel.findById(id);
-    if (!existingExercise) {
-      return res.status(404).json({
-        success: false,
-        data: []
-      });
-    }
-
-    return res.json({
-      success: true,
-      data: existingExercise.exercise_files_info
-    });
-
-  } catch (error) { return res.status(404).json({
-      success: false, data: []
-    }); 
-  }
-}
-
 async function updateExercise(req: Request, res: Response) {
 
   const { id } = req.params;
@@ -163,6 +138,16 @@ async function deleteExerciseById(req: Request, res: Response) {
 
   try {
 
+    const students = await UserModel.find({type: 'student'});
+    const excercises = await ExerciseModel.findById(id);
+
+    for ( const student of students ) {
+      await UserModel.findByIdAndUpdate(student._id, {
+        $pull: { pending_exercices: excercises._id } 
+      }
+      ).then( (res) => console.log(res) );
+    }
+    
     await ExerciseModel.findByIdAndDelete(id);
     
     return res.json({
