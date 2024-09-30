@@ -80,10 +80,16 @@ async function sign(req: Request, res: Response) {
       { expiresIn: '1d' }
     );
 
-    for (const pend of user.pending_exercices) {
-      const getter = await ExerciseModel.findById(pend);
-      pendings.push(getter);
+    if( user.type === 'student' ){
+
+      for (const pend of user.pending_exercices) {
+        const getter = await ExerciseModel.findById(pend);
+        pendings.push(getter);
+      }
+
     }
+
+    
 
     return res.json( { success: true, data: [user, pendings, token] } ).status(200);
 

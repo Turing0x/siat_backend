@@ -95,7 +95,7 @@ async function getFileByExercise(req: Request, res: Response) {
 async function updateExercise(req: Request, res: Response) {
 
   const { id } = req.params;
-  const excercises: Exercise = req.body;
+  const { description, annotations } = req.body;
 
   try {
 
@@ -107,12 +107,12 @@ async function updateExercise(req: Request, res: Response) {
       });
     }
 
-    const updated = Object.assign(existingExercise, excercises);
+    const updated = Object.assign(existingExercise, {description, annotations});
     await ExerciseModel.findByIdAndUpdate(id, updated);
 
     return res.json({
       success: true,
-      data: excercises
+      data: updated
     });
   } catch (error) { return res.status(404).json({
       success: false, data: []

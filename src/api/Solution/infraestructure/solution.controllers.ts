@@ -1,7 +1,6 @@
 import { Response, Request } from 'express';
 import { SolutionModel } from '../domain/solution.module';
 import { Solution } from '../models/solution.model';
-import { id_file_name } from '../../../database/multer.config';
 
 import path from 'path';
 
@@ -43,7 +42,7 @@ async function createSolution(req: Request, res: Response) {
     const newSolution = new SolutionModel({
       exercise_id: ex_id,
       student_id: student_id,
-      file_name: id_file_name
+      file_name: 'id_file_name'
     });
 
     await newSolution.save();
@@ -71,10 +70,6 @@ async function getFileBySolution(req: Request, res: Response) {
     const fileName = path.join(process.cwd(), './uploads', `${solution[0].file_name}.rar`);
     return res.status(200).sendFile(fileName);
 
-    return res.json({
-      success: true,
-      data: solution[0].file_name
-    });
   } catch (error) { 
     console.log(error);
     return res.status(404).json({

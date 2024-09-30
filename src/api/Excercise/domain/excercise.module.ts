@@ -14,7 +14,7 @@ const ExerciseSchema = new mongoose.Schema({
       type: String,
       require: true
     },
-    anotations: {
+    annotations: {
       type: String,
       require: false
     },

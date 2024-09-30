@@ -24,6 +24,10 @@ const SolutionSchema = new mongoose.Schema({
     anotations: {
         type: String,
         require: false
+    },
+    date: {
+        type: String,
+        require: true
     }
   
   });
