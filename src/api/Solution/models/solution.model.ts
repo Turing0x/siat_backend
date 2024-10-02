@@ -5,5 +5,4 @@ export type Solution = {
     evaluation: number;
     anotations: string;
     file_name: string;
-    date: string;
 }
