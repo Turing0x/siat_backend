@@ -83,7 +83,7 @@ async function createExercise(req: Request, res: Response) {
 async function updateExercise(req: Request, res: Response) {
 
   const { id } = req.params;
-  const { description, annotations } = req.body;
+  const { title, description, annotations } = req.body;
 
   try {
 
@@ -95,7 +95,7 @@ async function updateExercise(req: Request, res: Response) {
       });
     }
 
-    const updated = Object.assign(existingExercise, {description, annotations});
+    const updated = Object.assign(existingExercise, { title, description, annotations});
     await ExerciseModel.findByIdAndUpdate(id, updated);
 
     return res.json({
