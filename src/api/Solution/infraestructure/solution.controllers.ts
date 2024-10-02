@@ -22,12 +22,18 @@ async function getAllSolutions(req: Request, res: Response) {
 async function getSolutionById(req: Request, res: Response) {
   const { id } = req.params;
   try {
-    const solution = await SolutionModel.findById(id);
+    const solution = await SolutionModel.findById(id)
+      .populate(['student_id', 'exercise_id']);
+
+      console.log(solution);
+
     return res.json({
       success: true,
       data: solution
     });
-  } catch (error) { return res.status(404).json({
+  } catch (error) { 
+    console.log('error :>> ', error);
+    return res.status(404).json({
       success: false, data: []
     }); 
   }

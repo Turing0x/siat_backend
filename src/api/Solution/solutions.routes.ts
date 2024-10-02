@@ -8,8 +8,8 @@ const router = Router();
 router
 
   .get('/', SolutionControllers.getAllSolutions)
-  .get('/download/:id', SolutionControllers.getFileBySolution)
   .get('/:id', SolutionControllers.getSolutionById)
+  .get('/download/:id', SolutionControllers.getFileBySolution)
 
   .post('/:ex_id/:student_id', upload.single('solutionFile'), SolutionControllers.createSolution)
 
