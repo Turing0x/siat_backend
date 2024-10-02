@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { UserModel } from '../domain/user.module';
 import { User } from '../models/user.model';
 import { ExerciseModel } from '../../Excercise/domain/excercise.module';
+import { SolutionModel } from '../../Solution/domain/solution.module';
 
 
 async function getAllUsers(req: Request, res: Response) {
@@ -25,10 +26,10 @@ async function getUserById (req: Request, res: Response) {
 
   try {
 
-    const { userId } = req.params;
-    if( !userId ) return res.json({ success: false, msg: 'Usuario no encontrado' }); 
+    const { id } = req.params;
+    if( !id ) return res.json({ success: false, msg: 'Usuario no encontrado' }); 
 
-    const user = await UserModel.findById(userId);
+    const user = await UserModel.findById(id);
     if (!user) return res.json({ success: false, msg: 'Usuario no encontrado' }); 
 
     return res.json({ success: true, data: user });
@@ -146,10 +147,10 @@ async function deleteUserById(req: Request, res: Response) {
 
   try {
 
-    const { userId } = req.params;
-    if( !userId ) return res.json({ success: false, msg: 'Usuario no encontrado' }); 
+    const { id } = req.params;
+    if( !id ) return res.json({ success: false, msg: 'Usuario no encontrado' }); 
 
-    await UserModel.deleteOne({ _id: userId })
+    await UserModel.deleteOne({ _id: id })
 
     return res.json({ success: true, msg: 'Usuario eliminado' });
 
@@ -157,15 +158,14 @@ async function deleteUserById(req: Request, res: Response) {
 
 }
 
-
 async function getUserPendingExercises(req: Request, res: Response) {
 
   try{
       
-      const { userId } = req.params;
-      if( !userId ) return res.json({ success: false, msg: 'Usuario no encontrado' }); 
+      const { id } = req.params;
+      if( !id ) return res.json({ success: false, msg: 'Usuario no encontrado' }); 
   
-      const user = await UserModel.findById(userId);
+      const user = await UserModel.findById(id);
       if (!user) return res.json({ success: false, msg: 'Usuario no encontrado' }); 
   
       const pendings = [];
@@ -181,13 +181,47 @@ async function getUserPendingExercises(req: Request, res: Response) {
   }
 
 }
+
+async function getUserFinishedExercises(req: Request, res: Response) {
+
+  const { id } = req.params;
+
+  try{
+
+    if( !id ) return res.json({ success: false, msg: 'Usuario no encontrado' }); 
+
+    const user = await UserModel.findById(id);
+    if (!user) return res.json({ success: false, msg: 'Usuario no encontrado' }); 
+
+    const solutions = await SolutionModel.find();
+    const finished = [];
+
+    for (const exe of user.finished_exercices) {
+      const getter = await ExerciseModel.findById(exe);
+      const his_solution = solutions.find( 
+        sol => sol.exercise_id === getter._id.toString() && 
+          sol.student_id === id );
+
+      finished.push({
+        getter,
+        his_solution
+      });
+    }
+
+    return res.json({ success: true, data: finished });
+
+  }catch{ return res.json({ success: false, msg: 'Error al obtener ejercicios pendientes' }); }
+
+}
+
 export const UserControllers = {
-    deleteUserById,
-    changePassword,
-    getUserById,
-    getAllUsers,
-    editUser,
-    saveUser,
-    sign,
-    getUserPendingExercises
+  getUserFinishedExercises,
+  getUserPendingExercises,
+  deleteUserById,
+  changePassword,
+  getUserById,
+  getAllUsers,
+  editUser,
+  saveUser,
+  sign,
   }

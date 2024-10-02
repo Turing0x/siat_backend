@@ -22,6 +22,10 @@ const UserSchema = new mongoose.Schema({
     type: Array,
     require: true
   },
+  finished_exercices: {
+    type: Array,
+    require: true
+  },
   type: {
     type: String,
     require: true

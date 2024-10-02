@@ -6,4 +6,5 @@ export type User = {
   password: string;
   type: string;
   pending_exercices: string[];
+  finished_exercices: string[];
 }
