@@ -4,6 +4,8 @@ import { ExerciseModel } from '../domain/excercise.module';
 import { Exercise } from '../models/excercise.model';
 import { UserModel } from '../../User/domain/user.module';
 
+import fs from 'fs';
+
 async function getAllExercises(req: Request, res: Response) {
 
   try {
@@ -44,8 +46,8 @@ async function createExercise(req: Request, res: Response) {
   const data: Exercise = req.body;
 
   
-  const exFile = req.files['exFile'];
-  const solFile = req.files['solFile'];
+  const exFile: Express.Multer.File = req.files['exFile'];
+  const solFile: Express.Multer.File = req.files['possibleSolFile'];
   
   try {
 
@@ -106,6 +108,38 @@ async function updateExercise(req: Request, res: Response) {
   }
 }
 
+async function getFileByExcercise(req: Request, res: Response) {
+
+  const { id } = req.params;
+
+  try {
+
+    const existingExercise = await ExerciseModel.findById(id);
+    if (!existingExercise) {
+      return res.status(404).json({
+        success: false,
+        data: []
+      });
+    }
+
+    const exFile = existingExercise.exercise_files;
+    if (exFile) {
+      const full_path = `./uploads/exercises/${exFile}`;
+      if (full_path) {
+        return res.download(full_path);
+      }
+    }
+
+    return res.json({
+      success: false,
+      data: []
+    });
+  } catch (error) { return res.status(404).json({
+      success: false, data: []
+    }); 
+  }
+}
+
 async function addFilesToExercise(req: Request, res: Response) {
 
   const { id } = req.params;
@@ -156,6 +190,17 @@ async function deleteExerciseById(req: Request, res: Response) {
       ).then( (res) => console.log(res) );
     }
     
+    [excercises.exercise_files, excercises.solution].forEach(async (file, index) => {
+
+      const define_folder = index === 0 ? 'exercises' : 'possibleSolFile';
+      const full_path = `./uploads/${define_folder}/${file}`;
+      if (full_path) {
+        fs.unlink(full_path, (err) => {
+          if (err) throw err;
+        });
+      }
+    });
+
     await ExerciseModel.findByIdAndDelete(id);
     
     return res.json({
@@ -169,6 +214,7 @@ async function deleteExerciseById(req: Request, res: Response) {
 }
 
 export const ExerciseControllers = { 
+  getFileByExcercise,
   addFilesToExercise,
   deleteExerciseById,
   getAllExercises, 
