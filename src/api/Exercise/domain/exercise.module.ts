@@ -23,4 +23,4 @@ const ExerciseSchema = new mongoose.Schema({
   
   });
   
-  export const ExerciseModel = mongoose.model('excercises', ExerciseSchema);
+  export const ExerciseModel = mongoose.model('exercises', ExerciseSchema);

@@ -1,5 +1,3 @@
-import { FileInfo } from "./file.interface";
-
 export type Exercise = {
   _id: string;
   title: string;

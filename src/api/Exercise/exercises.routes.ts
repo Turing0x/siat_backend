@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { ExerciseControllers } from "./infraestructure/excercise.controllers";
+import { ExerciseControllers } from "./infraestructure/exercise.controllers";
 import { upload } from "../../database/multer.config";
 
 const router = Router()
@@ -25,4 +25,5 @@ router
   ]), ExerciseControllers.updateExercise)
   
   .delete('/:id', ExerciseControllers.deleteExerciseById)
+
 export const ExerciseRouter = router

@@ -14,7 +14,7 @@ const SolutionSchema = new mongoose.Schema({
     exercise_id: {
         type: String,
         require: true,
-        ref: 'excercises'
+        ref: 'exercises'
     },
     evaluation: {
         type: Number,

@@ -1,7 +1,7 @@
 import { Response, Request } from 'express';
 
-import { ExerciseModel } from '../domain/excercise.module';
-import { Exercise } from '../models/excercise.model';
+import { ExerciseModel } from '../domain/exercise.module';
+import { Exercise } from '../models/exercise.model';
 import { UserModel } from '../../User/domain/user.module';
 
 import fs from 'fs';
@@ -30,11 +30,11 @@ async function getExerciseById(req: Request, res: Response) {
 
   try {
 
-    const excercises = await ExerciseModel.findById(id);
+    const exercises = await ExerciseModel.findById(id);
 
     return res.json({
       success: true,
-      data: excercises
+      data: exercises
     });
   } catch (error) { return res.status(404).json({
       success: false, data: []
@@ -207,16 +207,16 @@ async function deleteExerciseById(req: Request, res: Response) {
   try {
 
     const students = await UserModel.find({type: 'student'});
-    const excercises = await ExerciseModel.findById(id);
+    const exercises = await ExerciseModel.findById(id);
 
     for ( const student of students ) {
       await UserModel.findByIdAndUpdate(student._id, {
-        $pull: { pending_exercices: excercises._id } 
+        $pull: { pending_exercices: exercises._id } 
       }
       ).then( (res) => console.log(res) );
     }
     
-    [excercises.exercise_files, excercises.solution].forEach(async (file, index) => {
+    [exercises.exercise_files, exercises.solution].forEach(async (file, index) => {
 
       const define_folder = index === 0 ? 'exercises' : 'possibleSolFile';
       const full_path = `./uploads/${define_folder}/${file}`;

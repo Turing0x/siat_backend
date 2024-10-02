@@ -3,8 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { UserModel } from '../domain/user.module';
 import { User } from '../models/user.model';
-import { ExerciseModel } from '../../Excercise/domain/excercise.module';
-import { SolutionModel } from '../../Solution/domain/solution.module';
+import { ExerciseModel } from '../../Exercise/domain/exercise.module';
 
 
 async function getAllUsers(req: Request, res: Response) {
