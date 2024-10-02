@@ -7,14 +7,15 @@ const router = Router()
 router
 
   .get('/', UserControllers.getAllUsers)
-  .get('/:userId', UserControllers.getUserById)
-  .get('/pending_exercises/:userId', UserControllers.getUserPendingExercises)
+  .get('/:id', UserControllers.getUserById)
+  .get('/finished/:id', UserControllers.getUserFinishedExercises)
+  .get('/pending/:id', UserControllers.getUserPendingExercises)
 
   .post('/', UserControllers.saveUser)
   .post('/signin', UserControllers.sign)
   .post('/changePassword', UserControllers.changePassword)
 
-  // .put('/:userId', UserControllers.editUser)
+  // .put('/:id', UserControllers.editUser)
 
-  .delete('/:userId', UserControllers.deleteUserById)
+  .delete('/:id', UserControllers.deleteUserById)
 export const UserRouter = router

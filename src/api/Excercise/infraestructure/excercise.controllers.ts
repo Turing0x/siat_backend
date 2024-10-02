@@ -58,7 +58,6 @@ async function createExercise(req: Request, res: Response) {
     await newExercise.save();
 
     const students = await UserModel.find({type: 'student'});
-
     for ( const student of students ) {
       await UserModel.findByIdAndUpdate(student._id, {
         $push: { pending_exercices: newExercise._id } 

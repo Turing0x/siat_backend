@@ -1,6 +1,8 @@
 import { Response, Request } from 'express';
 import { SolutionModel } from '../domain/solution.module';
 import { Solution } from '../models/solution.model';
+import { UserModel } from '../../User/domain/user.module';
+import mongoose from 'mongoose';
 
 async function getAllSolutions(req: Request, res: Response) {
 
@@ -42,6 +44,16 @@ async function createSolution(req: Request, res: Response) {
   const solutionFile: Express.Multer.File = req.file;
 
   try {
+
+    const mongoId = new mongoose.Types.ObjectId(ex_id)
+
+    const students = await UserModel.find({type: 'student'});
+    for ( const student of students ) {
+      await UserModel.findByIdAndUpdate(student._id, {
+        $pull: { pending_exercices: mongoId },
+        $push: { finished_exercices: mongoId }
+      }).then( (res) => {});
+    }
 
     const newSolution = new SolutionModel({
       exercise_id: ex_id,
