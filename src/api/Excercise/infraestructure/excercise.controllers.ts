@@ -44,7 +44,6 @@ async function getExerciseById(req: Request, res: Response) {
 async function createExercise(req: Request, res: Response) {
 
   const data: Exercise = req.body;
-
   
   const exFile: Express.Multer.File = req.files['exFile'];
   const solFile: Express.Multer.File = req.files['possibleSolFile'];
@@ -83,9 +82,12 @@ async function createExercise(req: Request, res: Response) {
 async function updateExercise(req: Request, res: Response) {
 
   const { id } = req.params;
-  const { title, description, annotations } = req.body;
+  const exce: Exercise = req.body;
 
   try {
+
+    const exFile: Express.Multer.File = req.files['exFile'];
+    const solFile: Express.Multer.File = req.files['possibleSolFile'];
 
     const existingExercise = await ExerciseModel.findById(id);
     if (!existingExercise) {
@@ -95,14 +97,18 @@ async function updateExercise(req: Request, res: Response) {
       });
     }
 
-    const updated = Object.assign(existingExercise, { title, description, annotations});
+    exce.exercise_files = exFile[0].filename;
+    exce.solution = solFile ? solFile[0].filename : null;
+
+    const updated = Object.assign(existingExercise, exce);
     await ExerciseModel.findByIdAndUpdate(id, updated);
 
     return res.json({
       success: true,
       data: updated
     });
-  } catch (error) { return res.status(404).json({
+  } catch (error) { 
+    return res.status(404).json({
       success: false, data: []
     }); 
   }

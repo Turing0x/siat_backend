@@ -18,7 +18,10 @@ router
 
   .post('/solution/:id', ExerciseControllers.addFilesToExercise)
   
-  .put('/:id', ExerciseControllers.updateExercise)
+  .put('/:id', upload.fields([
+    {name: 'exFile', maxCount: 1}, 
+    {name: 'possibleSolFile', maxCount: 1}
+  ]), ExerciseControllers.updateExercise)
   
   .delete('/:id', ExerciseControllers.deleteExerciseById)
 export const ExerciseRouter = router

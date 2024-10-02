@@ -1,13 +1,12 @@
-import e, { Response, Request } from 'express';
+import { Response, Request } from 'express';
 import { SolutionModel } from '../domain/solution.module';
 import { Solution } from '../models/solution.model';
-
-import path from 'path';
 
 async function getAllSolutions(req: Request, res: Response) {
 
   try {
-    const solutions = await SolutionModel.find();
+    const solutions = await SolutionModel.find()
+      .populate(['student_id', 'exercise_id']);
     return res.json({
       success: true,
       data: solutions
@@ -24,8 +23,6 @@ async function getSolutionById(req: Request, res: Response) {
   try {
     const solution = await SolutionModel.findById(id)
       .populate(['student_id', 'exercise_id']);
-
-      console.log(solution);
 
     return res.json({
       success: true,
