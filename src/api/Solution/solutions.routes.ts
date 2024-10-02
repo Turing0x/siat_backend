@@ -11,7 +11,7 @@ router
   .get('/download/:id', SolutionControllers.getFileBySolution)
   .get('/:id', SolutionControllers.getSolutionById)
 
-  .post('/:ex_id/:student_id', upload.single('file'), SolutionControllers.createSolution)
+  .post('/:ex_id/:student_id', upload.single('solutionFile'), SolutionControllers.createSolution)
 
   .put('/:id', SolutionControllers.updateSolution)
 

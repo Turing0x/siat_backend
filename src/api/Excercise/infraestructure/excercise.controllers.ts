@@ -46,8 +46,8 @@ async function createExercise(req: Request, res: Response) {
   const data: Exercise = req.body;
 
   
-  const exFile = req.files['exFile'];
-  const solFile = req.files['possibleSolFile'];
+  const exFile: Express.Multer.File = req.files['exFile'];
+  const solFile: Express.Multer.File = req.files['possibleSolFile'];
   
   try {
 
@@ -101,6 +101,38 @@ async function updateExercise(req: Request, res: Response) {
     return res.json({
       success: true,
       data: updated
+    });
+  } catch (error) { return res.status(404).json({
+      success: false, data: []
+    }); 
+  }
+}
+
+async function getFileByExcercise(req: Request, res: Response) {
+
+  const { id } = req.params;
+
+  try {
+
+    const existingExercise = await ExerciseModel.findById(id);
+    if (!existingExercise) {
+      return res.status(404).json({
+        success: false,
+        data: []
+      });
+    }
+
+    const exFile = existingExercise.exercise_files;
+    if (exFile) {
+      const full_path = `./uploads/exercises/${exFile}`;
+      if (full_path) {
+        return res.download(full_path);
+      }
+    }
+
+    return res.json({
+      success: false,
+      data: []
     });
   } catch (error) { return res.status(404).json({
       success: false, data: []
@@ -182,6 +214,7 @@ async function deleteExerciseById(req: Request, res: Response) {
 }
 
 export const ExerciseControllers = { 
+  getFileByExcercise,
   addFilesToExercise,
   deleteExerciseById,
   getAllExercises, 

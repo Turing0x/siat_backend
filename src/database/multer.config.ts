@@ -7,6 +7,8 @@ const storage = multer.diskStorage({
       cb(null, './uploads/exercises/')
     } else if ( file.fieldname === 'possibleSolFile' ) {
       cb(null, './uploads/possibleSolFile/')
+    } else if ( file.fieldname === 'solutionFile' ) {
+      cb(null, './uploads/solutionFile/')
     }
   },
   filename: function (req, file, cb) {
