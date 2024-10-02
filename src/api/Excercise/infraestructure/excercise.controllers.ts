@@ -4,6 +4,8 @@ import { ExerciseModel } from '../domain/excercise.module';
 import { Exercise } from '../models/excercise.model';
 import { UserModel } from '../../User/domain/user.module';
 
+import fs from 'fs';
+
 async function getAllExercises(req: Request, res: Response) {
 
   try {
@@ -45,7 +47,7 @@ async function createExercise(req: Request, res: Response) {
 
   
   const exFile = req.files['exFile'];
-  const solFile = req.files['solFile'];
+  const solFile = req.files['possibleSolFile'];
   
   try {
 
@@ -156,6 +158,17 @@ async function deleteExerciseById(req: Request, res: Response) {
       ).then( (res) => console.log(res) );
     }
     
+    [excercises.exercise_files, excercises.solution].forEach(async (file, index) => {
+
+      const define_folder = index === 0 ? 'exercises' : 'possibleSolFile';
+      const full_path = `./uploads/${define_folder}/${file}`;
+      if (full_path) {
+        fs.unlink(full_path, (err) => {
+          if (err) throw err;
+        });
+      }
+    });
+
     await ExerciseModel.findByIdAndDelete(id);
     
     return res.json({

@@ -12,7 +12,7 @@ router
 
   .post('/', upload.fields([
     {name: 'exFile', maxCount: 1}, 
-    {name: 'solFile', maxCount: 1}
+    {name: 'possibleSolFile', maxCount: 1}
   ]), ExerciseControllers.createExercise)
 
   .post('/solution/:id', ExerciseControllers.addFilesToExercise)
