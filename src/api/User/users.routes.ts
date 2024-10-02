@@ -8,7 +8,7 @@ router
 
   .get('/', UserControllers.getAllUsers)
   .get('/:id', UserControllers.getUserById)
-  .get('/finished/:id', UserControllers.getUserFinishedExercises)
+  .get('/allfin/:id', UserControllers.getUserFinishedExercises)
   .get('/pending/:id', UserControllers.getUserPendingExercises)
 
   .post('/', UserControllers.saveUser)

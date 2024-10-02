@@ -10,6 +10,7 @@ router
   .get('/', ExerciseControllers.getAllExercises)
   .get('/:id', ExerciseControllers.getExerciseById)
   .get('/download/:id', ExerciseControllers.getFileByExcercise)
+  .get('/finished/:id', ExerciseControllers.getFinishedById)
 
   .post('/', upload.fields([
     {name: 'exFile', maxCount: 1}, 

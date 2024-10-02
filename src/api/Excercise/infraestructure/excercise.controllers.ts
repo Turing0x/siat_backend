@@ -5,6 +5,7 @@ import { Exercise } from '../models/excercise.model';
 import { UserModel } from '../../User/domain/user.module';
 
 import fs from 'fs';
+import { SolutionModel } from '../../Solution/domain/solution.module';
 
 async function getAllExercises(req: Request, res: Response) {
 
@@ -35,6 +36,26 @@ async function getExerciseById(req: Request, res: Response) {
       success: true,
       data: excercises
     });
+  } catch (error) { return res.status(404).json({
+      success: false, data: []
+    }); 
+  }
+}
+
+async function getFinishedById(req: Request, res: Response) {
+
+  const { id } = req.params;
+
+  try {
+
+    const exercise = await ExerciseModel.findById(id);
+    const solution = await SolutionModel.find({ exercise_id: id });
+
+    return res.json({
+      success: true,
+      data: [exercise, ...solution]
+    });
+
   } catch (error) { return res.status(404).json({
       success: false, data: []
     }); 
@@ -222,6 +243,7 @@ export const ExerciseControllers = {
   getFileByExcercise,
   addFilesToExercise,
   deleteExerciseById,
+  getFinishedById,
   getAllExercises, 
   getExerciseById, 
   createExercise, 

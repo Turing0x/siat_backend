@@ -184,33 +184,24 @@ async function getUserPendingExercises(req: Request, res: Response) {
 
 async function getUserFinishedExercises(req: Request, res: Response) {
 
-  const { id } = req.params;
-
   try{
-
+      
+    const { id } = req.params;
     if( !id ) return res.json({ success: false, msg: 'Usuario no encontrado' }); 
 
     const user = await UserModel.findById(id);
     if (!user) return res.json({ success: false, msg: 'Usuario no encontrado' }); 
 
-    const solutions = await SolutionModel.find();
     const finished = [];
-
-    for (const exe of user.finished_exercices) {
-      const getter = await ExerciseModel.findById(exe);
-      const his_solution = solutions.find( 
-        sol => sol.exercise_id === getter._id.toString() && 
-          sol.student_id === id );
-
-      finished.push({
-        getter,
-        his_solution
-      });
+    for (const pend of user.finished_exercices) {
+      const getter = await ExerciseModel.findById(pend);
+      finished.push(getter);
     }
 
     return res.json({ success: true, data: finished });
-
-  }catch{ return res.json({ success: false, msg: 'Error al obtener ejercicios pendientes' }); }
+  }catch{
+    return res.json({ success: false, msg: 'Error al obtener ejercicios pendientes' });
+  }
 
 }
 
