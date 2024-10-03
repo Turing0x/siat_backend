@@ -19,6 +19,9 @@ const ExerciseSchema = new mongoose.Schema({
     },
     exercise_files: {
       type: String,
+    },
+    destine: {
+      type: String,
     }
   
   });

@@ -80,10 +80,12 @@ async function createExercise(req: Request, res: Response) {
 
     const students = await UserModel.find({type: 'student'});
     for ( const student of students ) {
-      await UserModel.findByIdAndUpdate(student._id, {
-        $push: { pending_exercices: newExercise._id } 
-        }
-      ).then( (res) => {});
+      if( student.group === data.destine ){
+        await UserModel.findByIdAndUpdate(student._id, {
+          $push: { pending_exercices: newExercise._id } 
+          }
+        ).then( (res) => {});
+      }
     }
 
     return res.json({
