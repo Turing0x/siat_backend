@@ -31,7 +31,6 @@ async function getSolutionById(req: Request, res: Response) {
       data: solution
     });
   } catch (error) { 
-    console.log('error :>> ', error);
     return res.status(404).json({
       success: false, data: []
     }); 
