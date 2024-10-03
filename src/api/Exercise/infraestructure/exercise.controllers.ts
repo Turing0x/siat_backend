@@ -6,6 +6,7 @@ import { UserModel } from '../../User/domain/user.module';
 
 import fs from 'fs';
 import { SolutionModel } from '../../Solution/domain/solution.module';
+import mongoose from 'mongoose';
 
 async function getAllExercises(req: Request, res: Response) {
 
@@ -80,10 +81,19 @@ async function createExercise(req: Request, res: Response) {
 
     const students = await UserModel.find({type: 'student'});
     for ( const student of students ) {
-      await UserModel.findByIdAndUpdate(student._id, {
-        $push: { pending_exercices: newExercise._id } 
+      if( data.destine === '0' ){
+        await UserModel.findByIdAndUpdate(student._id, {
+          $push: { pending_exercices: newExercise._id } 
+          }
+        ).then( (res) => {});
+      } else {
+        if( student.group === data.destine ){
+          await UserModel.findByIdAndUpdate(student._id, {
+            $push: { pending_exercices: newExercise._id } 
+            }
+          ).then( (res) => {});
         }
-      ).then( (res) => {});
+      }
     }
 
     return res.json({
@@ -92,7 +102,6 @@ async function createExercise(req: Request, res: Response) {
     });
 
   } catch (error) { 
-    console.log(error);
     return res.status(404).json({
       success: false, data: error
     }); 
@@ -208,22 +217,26 @@ async function deleteExerciseById(req: Request, res: Response) {
 
     const students = await UserModel.find({type: 'student'});
     const exercises = await ExerciseModel.findById(id);
+    
+    await SolutionModel.findOneAndDelete({
+      exercise_id: id
+    }).then(); 
 
     for ( const student of students ) {
       await UserModel.findByIdAndUpdate(student._id, {
-        $pull: { pending_exercices: exercises._id } 
-      }
-      ).then( (res) => console.log(res) );
+        $pull: { 
+          pending_exercices: exercises._id, 
+          finished_exercices: exercises._id 
+        }
+      }).then();
     }
-    
+  
     [exercises.exercise_files, exercises.solution].forEach(async (file, index) => {
 
       const define_folder = index === 0 ? 'exercises' : 'possibleSolFile';
       const full_path = `./uploads/${define_folder}/${file}`;
       if (full_path) {
-        fs.unlink(full_path, (err) => {
-          if (err) throw err;
-        });
+        fs.existsSync(full_path) && fs.unlinkSync(full_path);
       }
     });
 
@@ -233,7 +246,8 @@ async function deleteExerciseById(req: Request, res: Response) {
       success: true,
       data: []
     });
-  } catch (error) { return res.status(404).json({
+  } catch (error) { 
+    return res.status(404).json({
       success: false, data: []
     }); 
   }
