@@ -1,0 +1,19 @@
+;
+; BIND data file for local loopback interface
+;
+$TTL	604800
+@	IN	SOA robot.zone.cu. mailadmin.robot.zone.cu. (
+			      2		; Serial
+			 604800		; Refresh
+			  86400		; Retry
+			2419200		; Expire
+			 604800 )	; Negative Cache TTL
+;
+@	IN	NS	bender.
+100	IN	PTR	bender.robot.zone.cu.
+5	IN	PTR	pc1
+100	IN	PTR	novedades
+100	IN	PTR	ciencia
+100	IN	PTR	investigaciones
+100	IN	PTR	actualidad
+
