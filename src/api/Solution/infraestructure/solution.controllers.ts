@@ -1,74 +1,78 @@
-import { Response, Request } from 'express';
-import { SolutionModel } from '../domain/solution.module';
-import { Solution } from '../models/solution.model';
-import { UserModel } from '../../User/domain/user.module';
-import mongoose from 'mongoose';
+import { Response, Request } from "express";
+import { SolutionModel } from "../domain/solution.module";
+import { Solution } from "../models/solution.model";
+import { UserModel } from "../../User/domain/user.module";
+import mongoose from "mongoose";
 
 async function getAllSolutions(req: Request, res: Response) {
-
   try {
-    const solutions = await SolutionModel.find()
-      .populate(['student_id', 'exercise_id']);
+    const solutions = await SolutionModel.find().populate([
+      "student_id",
+      "exercise_id",
+    ]);
     return res.json({
       success: true,
-      data: solutions
+      data: solutions,
     });
-  } catch (error) { return res.status(404).json({
-      success: false, data: []
-    }); 
+  } catch (error) {
+    return res.status(404).json({
+      success: false,
+      data: [],
+    });
   }
-
 }
 
 async function getSolutionById(req: Request, res: Response) {
   const { id } = req.params;
   try {
-    const solution = await SolutionModel.findById(id)
-      .populate(['student_id', 'exercise_id']);
+    const solution = await SolutionModel.findById(id).populate([
+      "student_id",
+      "exercise_id",
+    ]);
 
     return res.json({
       success: true,
-      data: solution
+      data: solution,
     });
-  } catch (error) { 
+  } catch (error) {
     return res.status(404).json({
-      success: false, data: []
-    }); 
+      success: false,
+      data: [],
+    });
   }
 }
 
 async function createSolution(req: Request, res: Response) {
-
   const { ex_id, student_id } = req.params;
   const solutionFile: Express.Multer.File = req.file;
 
   try {
+    const mongoId = new mongoose.Types.ObjectId(ex_id);
 
-    const mongoId = new mongoose.Types.ObjectId(ex_id)
-
-    const students = await UserModel.find({type: 'student'});
-    for ( const student of students ) {
+    const students = await UserModel.find({ type: "student" });
+    for (const student of students) {
       await UserModel.findByIdAndUpdate(student._id, {
         $pull: { pending_exercices: mongoId },
-        $push: { finished_exercices: mongoId }
-      }).then( (res) => {});
+        $push: { finished_exercices: mongoId },
+      }).then((res) => {});
     }
 
     const newSolution = new SolutionModel({
       exercise_id: ex_id,
       student_id: student_id,
-      file_name: solutionFile.filename
+      file_name: solutionFile.filename,
     });
 
     await newSolution.save();
     return res.json({
       success: true,
-      data: newSolution
+      data: newSolution,
     });
-  } catch (error) { 
+  } catch (error) {
     return res.status(404).json({
-      success: false, data: []
-    }); 
+      success: false,
+      data: [],
+    });
   }
 }
 
@@ -79,7 +83,7 @@ async function getFileBySolution(req: Request, res: Response) {
     if (!solution) {
       return res.status(404).json({
         success: false,
-        data: []
+        data: [],
       });
     }
 
@@ -90,11 +94,11 @@ async function getFileBySolution(req: Request, res: Response) {
         return res.download(full_path);
       }
     }
-
-  } catch (error) { 
+  } catch (error) {
     return res.status(404).json({
-      success: false, data: []
-    }); 
+      success: false,
+      data: [],
+    });
   }
 }
 
@@ -105,11 +109,13 @@ async function updateSolution(req: Request, res: Response) {
     await SolutionModel.findByIdAndUpdate(id, solution);
     return res.json({
       success: true,
-      data: solution
+      data: solution,
     });
-  } catch (error) { return res.status(404).json({
-      success: false, data: []
-    }); 
+  } catch (error) {
+    return res.status(404).json({
+      success: false,
+      data: [],
+    });
   }
 }
 
@@ -119,11 +125,13 @@ async function deleteSolution(req: Request, res: Response) {
     await SolutionModel.findByIdAndDelete(id);
     return res.json({
       success: true,
-      data: []
+      data: [],
     });
-  } catch (error) { return res.status(404).json({
-      success: false, data: []
-    }); 
+  } catch (error) {
+    return res.status(404).json({
+      success: false,
+      data: [],
+    });
   }
 }
 
@@ -133,5 +141,5 @@ export const SolutionControllers = {
   getSolutionById,
   createSolution,
   updateSolution,
-  deleteSolution
-}
+  deleteSolution,
+};

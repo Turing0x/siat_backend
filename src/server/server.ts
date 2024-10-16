@@ -1,42 +1,45 @@
-import express, { Application  } from 'express';
-import cors from 'cors';
+import express, { Application } from "express";
+import cors from "cors";
 
-import { dbConnection } from '../database/config';
-import { api } from '../routes/index.routes';
+import { dbConnection } from "../database/config";
+import { api } from "../routes/index.routes";
 
 export class Server {
-
   app: Application;
 
-  constructor () {
-    this.app = express()
+  constructor() {
+    this.app = express();
 
     // Conectar la base de datos
-    this.conectDB()
+    this.conectDB();
     // Middlewares
-    this.middlewares()
+    this.middlewares();
 
-    this.routes()
+    this.routes();
   }
 
-  listen () {
-    this.app.listen(
-      process.env.PORT, () => { console.log('Servidor corriendo en el puerto', process.env.PORT) }
-    )
+  listen() {
+    this.app.listen(process.env.PORT, () => {
+      console.log("Servidor corriendo en el puerto", process.env.PORT);
+    });
   }
 
-  conectDB () { dbConnection() }
+  conectDB() {
+    dbConnection();
+  }
 
-  middlewares () {
-    this.app.use(cors())
+  middlewares() {
+    this.app.use(cors());
 
     // Lectura y parseo a formato JSON del body
-    this.app.use(express.json())
+    this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
 
     // Ruta publica para ver el html
-    this.app.use(express.static('src/public'))
+    this.app.use(express.static("src/public"));
   }
 
-  routes () { this.app.use(process.env.ROUTES_PREFIX, api) }
+  routes() {
+    this.app.use(process.env.ROUTES_PREFIX, api);
+  }
 }

@@ -1,21 +1,19 @@
-import { Router } from 'express';
+import { Router } from "express";
 
-import { UserControllers } from './infraestructure/user.controllers';
+import { UserControllers } from "./infraestructure/user.controllers";
 
-const router = Router()
+const router = Router();
 
 router
 
-  .get('/', UserControllers.getAllUsers)
-  .get('/:id', UserControllers.getUserById)
-  .get('/allfin/:id', UserControllers.getUserFinishedExercises)
-  .get('/pending/:id', UserControllers.getUserPendingExercises)
+  .get("/", UserControllers.getAllUsers)
+  .get("/:id", UserControllers.getUserById)
+  .get("/allfin/:id", UserControllers.getUserFinishedExercises)
+  .get("/pending/:id", UserControllers.getUserPendingExercises)
 
-  .post('/', UserControllers.saveUser)
-  .post('/signin', UserControllers.sign)
-  .post('/changePassword', UserControllers.changePassword)
+  .post("/", UserControllers.saveUser)
+  .post("/signin", UserControllers.sign)
+  .post("/changePassword", UserControllers.changePassword)
 
-  // .put('/:id', UserControllers.editUser)
-
-  .delete('/:id', UserControllers.deleteUserById)
-export const UserRouter = router
+  .delete("/:id", UserControllers.deleteUserById);
+export const UserRouter = router;
