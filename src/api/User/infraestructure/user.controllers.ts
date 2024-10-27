@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { UserModel } from "../domain/user.module";
 import { User } from "../models/user.model";
-import { ExerciseModel } from "../../Exercise/domain/exercise.module";
 
 async function getAllUsers(req: Request, res: Response) {
   try {
@@ -81,15 +80,8 @@ async function sign(req: Request, res: Response) {
       { expiresIn: "1d" }
     );
 
-    if (user.type === "student") {
-      for (const pend of user.pending_exercices) {
-        const getter = await ExerciseModel.findById(pend);
-        pendings.push(getter);
-      }
-    }
-
     return res
-      .json({ success: true, data: [user, pendings, token] })
+      .json({ success: true, data: [user, token] })
       .status(200);
   } catch (error) {
     return res.json({ success: false, msg: "Error interno" }).status(404);
@@ -145,58 +137,7 @@ async function deleteUserById(req: Request, res: Response) {
   }
 }
 
-async function getUserPendingExercises(req: Request, res: Response) {
-  try {
-    const { id } = req.params;
-    if (!id) return res.json({ success: false, msg: "Usuario no encontrado" });
-
-    const user = await UserModel.findById(id);
-    if (!user)
-      return res.json({ success: false, msg: "Usuario no encontrado" });
-
-    const pendings = [];
-
-    for (const pend of user.pending_exercices) {
-      const getter = await ExerciseModel.findById(pend);
-      pendings.push(getter);
-    }
-
-    return res.json({ success: true, data: pendings });
-  } catch {
-    return res.json({
-      success: false,
-      msg: "Error al obtener ejercicios pendientes",
-    });
-  }
-}
-
-async function getUserFinishedExercises(req: Request, res: Response) {
-  try {
-    const { id } = req.params;
-    if (!id) return res.json({ success: false, msg: "Usuario no encontrado" });
-
-    const user = await UserModel.findById(id);
-    if (!user)
-      return res.json({ success: false, msg: "Usuario no encontrado" });
-
-    const finished = [];
-    for (const pend of user.finished_exercices) {
-      const getter = await ExerciseModel.findById(pend);
-      finished.push(getter);
-    }
-
-    return res.json({ success: true, data: finished });
-  } catch {
-    return res.json({
-      success: false,
-      msg: "Error al obtener ejercicios pendientes",
-    });
-  }
-}
-
 export const UserControllers = {
-  getUserFinishedExercises,
-  getUserPendingExercises,
   deleteUserById,
   changePassword,
   getUserById,

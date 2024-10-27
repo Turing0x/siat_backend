@@ -1,7 +1,7 @@
 import express, { Application } from "express";
 import cors from "cors";
 
-import { dbConnection } from "../database/config";
+import { getConnection } from "../database/connection";
 import { api } from "../routes/index.routes";
 
 export class Server {
@@ -20,12 +20,13 @@ export class Server {
 
   listen() {
     this.app.listen(process.env.PORT, () => {
+      console.clear();
       console.log("Servidor corriendo en el puerto", process.env.PORT);
     });
   }
 
   conectDB() {
-    dbConnection();
+    getConnection();
   }
 
   middlewares() {
