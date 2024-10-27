@@ -83,7 +83,19 @@ async function deleteWorkerById(req: Request, res: Response) {
   }
 }
 
+async function getAditionalData(req: Request, res: Response) {
+  try {
+
+    const data = await WorkersManager("aditional");
+
+    return res.json(data);
+  } catch (error) {
+    return res.json({ success: false, msg: "Error al obtener datos" });
+  }
+}
+
 export const WorkerControllers = {
+  getAditionalData,
   deleteWorkerById,
   getWorkerById,
   getAllWorkers,

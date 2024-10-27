@@ -59,6 +59,13 @@ export async function WorkersManager(action: string, data?: any) {
         .query(query);
       break;
 
+    case 'aditional':
+      query = `SELECT ID, LTRIM(RTRIM(NOMBRE)) AS NOMBRE FROM Entidad; 
+               SELECT ID, LTRIM(RTRIM(NOMBRE)) AS NOMBRE FROM Departamentos;`;
+      result = await pool.request()
+        .query(query);
+      break;
+
   }
 
   await pool.close();
@@ -67,5 +74,5 @@ export async function WorkersManager(action: string, data?: any) {
     throw new Error('No action matched in WorkersManager.');
   }
 
-  return result.recordset;
+  return action === 'aditional' ? result.recordsets : result.recordset;
 }
